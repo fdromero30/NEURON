@@ -44,6 +44,8 @@ function handleMessage(data: WebSocket.RawData): void {
       }
     } else if (jsonData?.k?.x) {
       currencySocketReponseHandler(jsonData);
+    } else{
+      console.log('.')
     }
   } catch (error) {
     console.error("Error procesando el mensaje:", error);

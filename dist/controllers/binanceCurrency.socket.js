@@ -43,6 +43,9 @@ function handleMessage(data) {
         else if ((_a = jsonData === null || jsonData === void 0 ? void 0 : jsonData.k) === null || _a === void 0 ? void 0 : _a.x) {
             (0, currencyResponseHandler_1.currencySocketReponseHandler)(jsonData);
         }
+        else {
+            console.log('.');
+        }
     }
     catch (error) {
         console.error("Error procesando el mensaje:", error);
