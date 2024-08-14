@@ -2,12 +2,10 @@ import { wsResponse } from "../models/webSocketResponse";
 import { calculateSupertrend } from "../services/superTrendService";
 import axios from "axios";
 
-export function currencySocketReponseHandler(data: wsResponse) {
-  // console.log(`Precio del BTCUSDT en tiempo real:`, data);
-
+export async function currencySocketReponseHandler(data: wsResponse) {
   const prices: PriceData[] = [];
 
-  getLast14BTCPrices().then(async (res) => {
+  await getLast14BTCPrices().then(async (res) => {
     await res.forEach((element: Kline) => {
       prices.push({
         close: element.close,
@@ -15,8 +13,15 @@ export function currencySocketReponseHandler(data: wsResponse) {
         low: element.low,
       });
     });
-    console.log(calculateSupertrend(prices, 14, 4));
+    console.log(
+      "El supertrend es:",
+      calculateSupertrend(prices, 10, 4),
+      "a las",
+      new Date()
+    );
   });
+
+  console.log("El valor del Activo es", data.k.c);
 }
 
 async function getLast14BTCPrices(): Promise<any> {

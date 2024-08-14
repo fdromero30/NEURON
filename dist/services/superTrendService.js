@@ -66,8 +66,9 @@ function calculateSupertrend(data, length, factor) {
                 supertrendDown.push(current.close - factor * currentATR);
             }
         }
-        previousSupertrendUp = supertrendUp[supertrendUp.length - 1];
-        previousSupertrendDown = supertrendDown[supertrendDown.length - 1];
+        previousSupertrendUp = supertrendUp[supertrendUp.length - 2];
+        previousSupertrendDown = supertrendDown[supertrendDown.length - 2];
+        console.log(previousSupertrendUp, previousSupertrendDown);
     }
     return supertrendUp[supertrendUp.length - 2];
 }

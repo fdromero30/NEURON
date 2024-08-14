@@ -16,18 +16,20 @@ exports.currencySocketReponseHandler = currencySocketReponseHandler;
 const superTrendService_1 = require("../services/superTrendService");
 const axios_1 = __importDefault(require("axios"));
 function currencySocketReponseHandler(data) {
-    // console.log(`Precio del BTCUSDT en tiempo real:`, data);
-    const prices = [];
-    getLast14BTCPrices().then((res) => __awaiter(this, void 0, void 0, function* () {
-        yield res.forEach((element) => {
-            prices.push({
-                close: element.close,
-                high: element.high,
-                low: element.low,
+    return __awaiter(this, void 0, void 0, function* () {
+        const prices = [];
+        yield getLast14BTCPrices().then((res) => __awaiter(this, void 0, void 0, function* () {
+            yield res.forEach((element) => {
+                prices.push({
+                    close: element.close,
+                    high: element.high,
+                    low: element.low,
+                });
             });
-        });
-        console.log((0, superTrendService_1.calculateSupertrend)(prices, 14, 4));
-    }));
+            console.log("El supertrend es:", (0, superTrendService_1.calculateSupertrend)(prices, 10, 4), "a las", new Date());
+        }));
+        console.log("El valor del Activo es", data.k.c);
+    });
 }
 function getLast14BTCPrices() {
     return __awaiter(this, void 0, void 0, function* () {
