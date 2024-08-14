@@ -1,5 +1,5 @@
 "use strict";
-const neuronSocketXauUsd = require("./controllers/XAUUSD.socket");
+const neuronCurrencyBinanceSocket = require("./controllers/binanceCurrency.socket");
 const express = require("express");
 const app = express();
 const port = 3000;
@@ -8,5 +8,5 @@ app.get("/", (req, res) => {
 });
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
-    neuronSocketXauUsd.createSocket();
+    neuronCurrencyBinanceSocket.createSocket('btcusdt');
 });
