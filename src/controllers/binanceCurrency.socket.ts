@@ -1,5 +1,6 @@
 import WebSocket from "ws";
 import { wsResponse } from "../models/webSocketResponse";
+import { currencySocketReponseHandler } from "../handlers/currencyResponseHandler";
 
 const RECONNECT_INTERVAL = 5000; // Intervalo de reconexión en milisegundos
 let ws: WebSocket | null = null;
@@ -42,7 +43,7 @@ function handleMessage(data: WebSocket.RawData): void {
         ws?.send("pong");
       }
     } else if (jsonData?.k?.x) {
-      console.log(`Precio del ${currency} en tiempo real:`, jsonData);
+      currencySocketReponseHandler(jsonData);
     }
   } catch (error) {
     console.error("Error procesando el mensaje:", error);

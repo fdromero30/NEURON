@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createSocket = createSocket;
 const ws_1 = __importDefault(require("ws"));
+const currencyResponseHandler_1 = require("../handlers/currencyResponseHandler");
 const RECONNECT_INTERVAL = 5000; // Intervalo de reconexión en milisegundos
 let ws = null;
 let currency = "";
@@ -40,7 +41,7 @@ function handleMessage(data) {
             }
         }
         else if ((_a = jsonData === null || jsonData === void 0 ? void 0 : jsonData.k) === null || _a === void 0 ? void 0 : _a.x) {
-            console.log(`Precio del ${currency} en tiempo real:`, jsonData);
+            (0, currencyResponseHandler_1.currencySocketReponseHandler)(jsonData);
         }
     }
     catch (error) {
