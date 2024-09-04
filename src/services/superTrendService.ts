@@ -29,7 +29,6 @@ function calculateATR(data: PriceData[], period: number): number[] {
     const averageTR = periodTR.reduce((a, b) => a + b, 0) / period;
     atr.push(averageTR);
   }
-
   return atr;
 }
 
@@ -44,7 +43,7 @@ function calculateSupertrend(
   data: PriceData[],
   length: number,
   factor: number
-): number {
+): any {
   // Implementación de calculateSupertrend aquí
   const atr = calculateATR(data, length);
   const supertrendUp: number[] = [];
@@ -82,13 +81,15 @@ function calculateSupertrend(
       }
     }
 
-    previousSupertrendUp = supertrendUp[supertrendUp.length - 2];
-    previousSupertrendDown = supertrendDown[supertrendDown.length - 2];
-
-    console.log(previousSupertrendUp, previousSupertrendDown)
+    previousSupertrendUp = supertrendUp[supertrendUp.length - 3];
+    previousSupertrendDown = supertrendDown[supertrendDown.length - 3];
   }
-
-  return supertrendUp[supertrendUp.length - 2];
+  return {
+    supertrendUp: supertrendUp[supertrendUp.length - 2],
+    supertrendDown: supertrendDown[supertrendDown.length - 2],
+    previousSupertrendUp,
+    previousSupertrendDown,
+  };
 }
 
 export { calculateSupertrend };

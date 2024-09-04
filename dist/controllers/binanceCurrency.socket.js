@@ -9,6 +9,7 @@ const currencyResponseHandler_1 = require("../handlers/currencyResponseHandler")
 const RECONNECT_INTERVAL = 5000; // Intervalo de reconexión en milisegundos
 let ws = null;
 let currency = "";
+// wsTradingView();
 /**
  * Crea una nueva conexión WebSocket y maneja los eventos.
  * @param currencyInput - El par de divisas para suscribirse.
@@ -44,7 +45,7 @@ function handleMessage(data) {
             (0, currencyResponseHandler_1.currencySocketReponseHandler)(jsonData);
         }
         else {
-            console.log('.');
+            console.log(".");
         }
     }
     catch (error) {
@@ -63,4 +64,31 @@ function handleClose(code, reason) {
         console.log("Intentando reconectar...");
         createSocket(currency);
     }, RECONNECT_INTERVAL);
+}
+function wsTradingView() {
+    const WebSocket = require("ws");
+    // Crear una nueva conexión WebSocket al servidor de TradingView
+    const socket = new WebSocket("wss://data.tradingview.com/socket.io/websocket");
+    socket.on("open", function open() {
+        console.log("Conexión establecida");
+        // Envía un mensaje al servidor para suscribirte a un símbolo
+        socket.send(JSON.stringify({
+            m: "chart_create_session",
+            p: ["cs_1", ""], // El 'cs_1' es el ID de sesión único
+        }));
+        socket.send(JSON.stringify({
+            m: "quote_add_symbols",
+            p: ["cs_1", "XAUUSD", { flags: ["force_permission"] }],
+        }));
+        socket.send(JSON.stringify({
+            m: "quote_fast_symbols",
+            p: ["cs_1", ["XAUUSD"]],
+        }));
+    });
+    socket.on("message", function incoming(data) {
+        console.log("Mensaje recibido:", data);
+    });
+    socket.on("close", function close() {
+        console.log("Conexión cerrada");
+    });
 }

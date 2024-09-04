@@ -18,6 +18,7 @@ const axios_1 = __importDefault(require("axios"));
 function currencySocketReponseHandler(data) {
     return __awaiter(this, void 0, void 0, function* () {
         const prices = [];
+        let supertrend = null;
         yield getLast14BTCPrices().then((res) => __awaiter(this, void 0, void 0, function* () {
             yield res.forEach((element) => {
                 prices.push({
@@ -26,7 +27,14 @@ function currencySocketReponseHandler(data) {
                     low: element.low,
                 });
             });
-            console.log("El supertrend es:", (0, superTrendService_1.calculateSupertrend)(prices, 10, 4), "a las", new Date());
+            supertrend = (0, superTrendService_1.calculateSupertrend)(prices, 10, 4);
+            // console.log("El supertrend es:", supertrend, "a las", new Date());
+            if (supertrend && data.k.c > (supertrend === null || supertrend === void 0 ? void 0 : supertrend.previousSupertrendUp)) {
+                console.log("El valor del superTrend es:", Math.min(supertrend.supertrendUp, Math.max(supertrend === null || supertrend === void 0 ? void 0 : supertrend.previousSupertrendDown, parseFloat(data.k.c))));
+            }
+            else if (supertrend && data.k.c < (supertrend === null || supertrend === void 0 ? void 0 : supertrend.previousSupertrendDown)) {
+                console.log("El superTrend es:", Math.max(supertrend.supertrendDown, Math.min(parseFloat(data.k.c), supertrend.previousSupertrendUp)));
+            }
         }));
         console.log("El valor del Activo es", data.k.c);
     });

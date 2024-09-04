@@ -4,6 +4,7 @@ import axios from "axios";
 
 export async function currencySocketReponseHandler(data: wsResponse) {
   const prices: PriceData[] = [];
+  let supertrend: any = null;
 
   await getLast14BTCPrices().then(async (res) => {
     await res.forEach((element: Kline) => {
@@ -13,12 +14,25 @@ export async function currencySocketReponseHandler(data: wsResponse) {
         low: element.low,
       });
     });
-    console.log(
-      "El supertrend es:",
-      calculateSupertrend(prices, 10, 4),
-      "a las",
-      new Date()
-    );
+    supertrend = calculateSupertrend(prices, 10, 4);
+    // console.log("El supertrend es:", supertrend, "a las", new Date());
+    if (supertrend && data.k.c > supertrend?.previousSupertrendUp) {
+      console.log(
+        "El valor del superTrend es:",
+        Math.min(
+          supertrend.supertrendUp,
+          Math.max(supertrend?.previousSupertrendDown, parseFloat(data.k.c))
+        )
+      );
+    } else if (supertrend && data.k.c < supertrend?.previousSupertrendDown) {
+      console.log(
+        "El superTrend es:",
+        Math.max(
+          supertrend.supertrendDown,
+          Math.min(parseFloat(data.k.c), supertrend.previousSupertrendUp)
+        )
+      );
+    }
   });
 
   console.log("El valor del Activo es", data.k.c);
@@ -42,6 +56,7 @@ async function getLast14BTCPrices(): Promise<any> {
       low: parseFloat(kline[4]),
       close: parseFloat(kline[1]),
       volume: parseFloat(kline[6]),
+      
     }));
 
     return prices;
